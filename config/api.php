@@ -12,7 +12,8 @@ return [
     */
     'server' => [
         'urls' => [
-            'auth' => 'https://lk.cm.expert/oauth/token'
+            'auth' => 'https://lk.cm.expert/oauth/token',
+            'stock' => 'https://lk.cm.expert/api/v1/dealers/dms/cars'
         ]
     ],
 
@@ -42,5 +43,17 @@ return [
             'times' => 3,
             'sleep' => 5000
         ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Request
+    |--------------------------------------------------------------------------
+    |
+    | Request options
+    |
+    */
+    'request' => [
+        'perPage' => 50,
     ]
 ];

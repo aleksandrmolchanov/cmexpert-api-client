@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Exception;
+use Illuminate\Http\Client\PendingRequest;
 
 class Importer
 {
@@ -10,6 +14,16 @@ class Importer
      * API access token
      */
     public string $accessToken;
+
+    /*
+     * Request url
+     */
+    public string $requestUrl;
+
+    /*
+     * Request filters
+     */
+    public array $requestFilters;
 
     /*
      * Request retry options
@@ -43,12 +57,66 @@ class Importer
      */
     public function getAccessToken(): string
     {
-        $response = Http::retry($this->retry['times'], $this->retry['sleep'])->post(config('api.server.urls.auth'), [
+        $params = [
             'grant_type' => 'client_credentials',
             'client_id' => config('api.client.id'),
             'client_secret' => config('api.client.secret')
-        ]);
+        ];
+        $response = Http::retry($this->retry['times'], $this->retry['sleep'])->post(config('api.server.urls.auth'), $params);
 
         return $response->json('access_token');
+    }
+
+    /**
+     * Gets data from api and stores it
+     *
+     * @return void
+     */
+    public function import()
+    {
+        $pagesCount = 0;
+        $page = 1;
+        $perPage = config('api.request.perPage');
+
+        do{
+            $pageResponse = $this->getData($this->requestUrl, array_merge(['page' => $page, 'perPage' => $perPage], $this->requestFilters));
+            if($pageResponse->successful())
+            {
+                $pagesCount = $pageResponse->header('x-pagination-page-count');
+                $this->processData($pageResponse->json());
+            }
+            $page++;
+        }
+        while($page <= $pagesCount);
+    }
+
+    /**
+     * Process single page from api
+     *
+     * @var string $url
+     * @var array $params
+     *
+     * @return Response
+     */
+    public function getData(string $url, array $params = []): Response
+    {
+        return Http::withHeaders(['Authorization' => 'Bearer ' . $this->accessToken])->retry($this->retry['times'], $this->retry['sleep'], function (Exception $exception, PendingRequest $request) {
+            if(strstr($exception->getMessage(), 'invalid credentials'))
+            {
+                $this->updateAccessToken();
+                $request->withHeaders(['Authorization' => 'Bearer ' . $this->accessToken]);
+            }
+            return true;
+        })->get($url, $params);
+    }
+
+    /**
+     * Process single page from api
+     *
+     * @return void
+     */
+    public function processData($data)
+    {
+
     }
 }
