@@ -22,4 +22,14 @@ class ReferenceGear extends Reference
             'full' => 'Роботизированная'
         ]
     ];
+
+    public function getShort($key, $default = null) {
+        $value = data_get($this->references, $key . '.short');
+        return $value ?? $default;
+    }
+
+    public function getFull($key, $default = null) {
+        $value = data_get($this->references, $key . '.full');
+        return $value ?? $default;
+    }
 }
