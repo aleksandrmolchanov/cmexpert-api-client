@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Exception;
 use Illuminate\Http\Client\PendingRequest;
@@ -24,6 +25,11 @@ class Importer
      * Request filters
      */
     public array $requestFilters;
+
+    /*
+     * DB table name
+     */
+    public string $tableName;
 
     /*
      * Request retry options
@@ -132,6 +138,6 @@ class Importer
      */
     public function storeData($data)
     {
-
+        DB::table($this->tableName)->insert($data);
     }
 }
