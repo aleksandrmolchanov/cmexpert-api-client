@@ -68,7 +68,7 @@ class Importer
     }
 
     /**
-     * Gets data from api and stores it
+     * Get data from api by pages and process it
      *
      * @return void
      */
@@ -77,17 +77,20 @@ class Importer
         $pagesCount = 0;
         $page = 1;
         $perPage = config('api.request.perPage');
+        $data = [];
 
         do{
             $pageResponse = $this->getData($this->requestUrl, array_merge(['page' => $page, 'perPage' => $perPage], $this->requestFilters));
             if($pageResponse->successful())
             {
                 $pagesCount = $pageResponse->header('x-pagination-page-count');
-                $this->processData($pageResponse->json());
+                $data = array_merge($data, $this->processPage($pageResponse->json()));
             }
             $page++;
         }
         while($page <= $pagesCount);
+
+        $this->store($data);
     }
 
     /**
@@ -113,9 +116,21 @@ class Importer
     /**
      * Process single page from api
      *
+     * @var array $data
+     *
+     * @return array
+     */
+    public function processPage(array $data): array
+    {
+        return [];
+    }
+
+    /**
+     * Store data to database
+     *
      * @return void
      */
-    public function processData($data)
+    public function storeData($data)
     {
 
     }
