@@ -96,7 +96,7 @@ class Importer
         }
         while($page <= $pagesCount);
 
-        $this->store($data);
+        $this->storeData($data);
     }
 
     /**
