@@ -12,4 +12,9 @@ class ReferenceOperations extends Reference
         'logistics' => 'Логистика',
         'legalproblems' => 'Юридические проблемы'
     ];
+
+    public function getCodes(): array
+    {
+        return array_keys($this->references);
+    }
 }
