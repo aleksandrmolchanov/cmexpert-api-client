@@ -13,7 +13,10 @@ return [
     'server' => [
         'urls' => [
             'auth' => 'https://lk.cm.expert/oauth/token',
-            'stock' => 'https://lk.cm.expert/api/v1/dealers/dms/cars'
+            'stock' => 'https://lk.cm.expert/api/v1/dealers/dms/cars',
+            'operations' => 'https://lk.cm.expert/api/v1/dealers/{dealerId}/dms/cars/{dmsCarId}/planned-operations',
+            'appraisal' => 'https://lk.cm.expert/api/v1/cars/appraisals?filter[id]={id}',
+            'placements' => 'https://lk.cm.expert/api/v1/dealers/dms/placements?filter[dmsCarId]={dmsCarId}'
         ]
     ],
 
