@@ -9,6 +9,6 @@ class Reference
     protected array $references = [];
 
     public function get($key, $default = null) {
-        return Arr::get($this->references, $key, $default);
+        return $key ? Arr::get($this->references, $key, $default) : null;
     }
 }
