@@ -12,7 +12,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        foreach(['sales' => 'S', 'numbers' => 'N'] as $entity => $option)
+        {
+            $instances = config("api.schedule.{$entity}.instances");
+            $pagesPerInstance = config("api.schedule.{$entity}.pagesPerInstance");
+
+            for($i = 1; $i <= $instances; $i++)
+            {
+                $pageStart = $i * $pagesPerInstance - $pagesPerInstance + 1;
+                $schedule->command("sync -{$option} {$pageStart} {$pagesPerInstance}")->dailyAt('00:00')->runInBackground();
+            }
+        }
     }
 
     /**

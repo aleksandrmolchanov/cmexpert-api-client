@@ -58,5 +58,24 @@ return [
     */
     'request' => [
         'perPage' => 50,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Schedule
+    |--------------------------------------------------------------------------
+    |
+    | Schedule options
+    |
+    */
+    'schedule' => [
+        'numbers' => [
+            'instances' => 10,
+            'pagesPerInstance' => 9
+        ],
+        'sales' => [
+            'instances' => 10,
+            'pagesPerInstance' => 9
+        ]
     ]
 ];
