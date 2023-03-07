@@ -80,9 +80,8 @@ class Importer
      *
      * @return void
      */
-    public function import(int $pageStart = 1, int $pages = INF)
+    public function import(int $pageStart = 1, int $pagesCount = INF)
     {
-        $pagesCount = 0;
         $perPage = config('api.request.perPage');
         $page = $pageStart;
 
@@ -90,23 +89,26 @@ class Importer
             $pageResponse = $this->getData($this->requestUrl, array_merge(['page' => $page, 'perPage' => $perPage], $this->requestFilters));
             if($pageResponse->successful())
             {
-                $pagesCount = $pageResponse->header('x-pagination-page-count');
+                if($pagesCount == INF || $pagesCount == 0)
+                {
+                    $pagesCount = $pageResponse->header('x-pagination-page-count');
+                }
                 $data = $this->processPage($pageResponse->json());
                 $this->storeData($data);
             }
             $page++;
-        }while($page <= $pagesCount && $page <= ($pages - 1 + $pageStart));
+        }while($page <= ($pagesCount - 1 + $pageStart));
     }
 
     /**
      * Process single page from api
      *
      * @var string $url
-     * @var array $params
+     * @var array|null $params
      *
      * @return Response
      */
-    public function getData(string $url, array $params = []): Response
+    public function getData(string $url, array $params = null): Response
     {
         return Http::withHeaders(['Authorization' => 'Bearer ' . $this->accessToken])->retry($this->retry['times'], $this->retry['sleep'], function (Exception $exception, PendingRequest $request) {
             if(strstr($exception->getMessage(), 'invalid credentials'))
@@ -138,5 +140,15 @@ class Importer
     public function storeData($data)
     {
         DB::table($this->tableName)->insert($data);
+    }
+
+    /**
+     * Get pages count
+     *
+     * @return int
+     */
+    public function getPagesCount(): int
+    {
+        return 0;
     }
 }
