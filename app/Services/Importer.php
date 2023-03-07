@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -76,27 +75,27 @@ class Importer
     /**
      * Get data from api by pages and process it
      *
+     * @var int $page
+     * @var int $pages
+     *
      * @return void
      */
-    public function import()
+    public function import(int $pageStart = 1, int $pages = INF)
     {
         $pagesCount = 0;
-        $page = 1;
         $perPage = config('api.request.perPage');
-        $data = [];
+        $page = $pageStart;
 
         do{
             $pageResponse = $this->getData($this->requestUrl, array_merge(['page' => $page, 'perPage' => $perPage], $this->requestFilters));
             if($pageResponse->successful())
             {
                 $pagesCount = $pageResponse->header('x-pagination-page-count');
-                $data = array_merge($data, $this->processPage($pageResponse->json()));
+                $data = $this->processPage($pageResponse->json());
+                $this->storeData($data);
             }
             $page++;
-        }
-        while($page <= $pagesCount);
-
-        $this->storeData($data);
+        }while($page <= $pagesCount && $page <= ($pages - 1 + $pageStart));
     }
 
     /**

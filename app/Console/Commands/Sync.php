@@ -13,7 +13,7 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $signature = 'sync {--N|numbers} {--S|sales}';
+    protected $signature = 'sync {--N|numbers} {--S|sales} {page=1} {pages=null}';
 
     /**
      * The console command description.
@@ -27,16 +27,19 @@ class Sync extends Command
      */
     public function handle(): void
     {
+        $page = $this->argument('page');
+        $pages = $this->argument('pages');
+
         if($this->option('numbers'))
         {
             $importer = new NumbersImporter();
-            $importer->import();
+            $importer->import($page, $pages);
         }
 
         if($this->option('sales'))
         {
             $importer = new SalesImporter();
-            $importer->import();
+            $importer->import($page, $pages);
         }
     }
 }
