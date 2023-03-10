@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // Import numbers
         $schedule->command("sync -N 1 9")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
         $schedule->command("sync -N 10 9")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
         $schedule->command("sync -N 19 9")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
@@ -20,6 +21,13 @@ class Kernel extends ConsoleKernel
         $schedule->command("sync -N 46 9")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
         $schedule->command("sync -N 55 9")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
         $schedule->command("sync -N 64 9")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
+
+        // Clear sales
+        $schedule->command("clearSales")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
+
+        // Import sales
+
+
     }
 
     /**
