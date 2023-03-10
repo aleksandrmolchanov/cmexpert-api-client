@@ -33,13 +33,13 @@ class Sync extends Command
         if($this->option('numbers'))
         {
             $importer = new NumbersImporter();
-            $importer->import($page, $pages);
+            $importer->import((int) $page, (int) $pages);
         }
 
         if($this->option('sales'))
         {
             $importer = new SalesImporter();
-            $importer->import($page, $pages);
+            $importer->import((int) $page, (int) $pages);
         }
     }
 }
