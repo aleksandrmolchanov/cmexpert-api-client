@@ -385,6 +385,18 @@ class AutoImporter extends Importer
     }
 
     /**
+     * Get total discount
+     *
+     * @var array $entity
+     *
+     * @return int|null
+     */
+    public function getDiscountTotal(array $entity): ?int
+    {
+        return ($entity['discountTradeIn'] ?? 0) + ($entity['discountCredit'] ?? 0) + ($entity['discountInsurance'] ?? 0);
+    }
+
+    /**
      * Get appraiser
      *
      * @var array|null $appraisal
@@ -406,6 +418,18 @@ class AutoImporter extends Importer
     public function getAppraisalManager(array|null $appraisal): ?string
     {
         return $appraisal ? ($appraisal['salesManager']['id'] . ': ' . $appraisal['salesManager']['name']) : null;
+    }
+
+    /**
+     * Get seller
+     *
+     * @var array $entity
+     *
+     * @return string|null
+     */
+    public function getSeller(array $entity): ?string
+    {
+        return $entity['soldBy'] ? ($entity['soldBy']['id'] . ': ' . $entity['soldBy']['name']) : null;
     }
 
     /**
