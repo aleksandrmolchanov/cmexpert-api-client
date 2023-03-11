@@ -26,7 +26,14 @@ class Kernel extends ConsoleKernel
         $schedule->command("clearSales")->dailyAt('00:00')->timezone('Asia/Yekaterinburg')->runInBackground();
 
         // Import sales
-
+        $schedule->command("sync -S 1 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
+        $schedule->command("sync -S 10 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
+        $schedule->command("sync -S 19 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
+        $schedule->command("sync -S 28 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
+        $schedule->command("sync -S 37 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
+        $schedule->command("sync -S 46 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
+        $schedule->command("sync -S 55 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
+        $schedule->command("sync -S 64 9")->dailyAt('00:05')->timezone('Asia/Yekaterinburg')->runInBackground();
 
     }
 
